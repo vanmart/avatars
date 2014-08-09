@@ -14,10 +14,13 @@ DROP TABLE IF EXISTS `pets_history`.`datos` ;
 CREATE  TABLE IF NOT EXISTS `pets_history`.`datos` (
   `id_datos` INT NOT NULL ,
   `nombre` VARCHAR(45) NOT NULL ,
+  `apellido` VARCHAR(45) NOT NULL ,
   `direccion` VARCHAR(45) NULL ,
   `telefono` INT NOT NULL ,
   `email` VARCHAR(45) NOT NULL ,
   `cuidad` VARCHAR(45) NOT NULL ,
+  `nombre_de_usuario` VARCHAR(45) NOT NULL ,
+  `contraseña` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`id_datos`) )
 ENGINE = InnoDB;
 
@@ -50,18 +53,11 @@ CREATE  TABLE IF NOT EXISTS `pets_history`.`veterinario` (
   `id_veterinario` INT NOT NULL ,
   `especialidad` VARCHAR(45) NULL ,
   `datos_id_datos` INT NOT NULL ,
-  `cliente_id_cliente` INT NOT NULL ,
   PRIMARY KEY (`id_veterinario`) ,
   INDEX `fk_veterinario_entidad1_idx` (`datos_id_datos` ASC) ,
-  INDEX `fk_veterinario_cliente1_idx` (`cliente_id_cliente` ASC) ,
   CONSTRAINT `fk_veterinario_entidad1`
     FOREIGN KEY (`datos_id_datos` )
     REFERENCES `pets_history`.`datos` (`id_datos` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_veterinario_cliente1`
-    FOREIGN KEY (`cliente_id_cliente` )
-    REFERENCES `pets_history`.`cliente` (`id_cliente` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -193,6 +189,30 @@ CREATE  TABLE IF NOT EXISTS `pets_history`.`imagen` (
   CONSTRAINT `fk_foto_anotacion1`
     FOREIGN KEY (`anotacion_id_anotacion` )
     REFERENCES `pets_history`.`anotacion` (`id_anotacion` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `pets_history`.`cliente_has_veterinario`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `pets_history`.`cliente_has_veterinario` ;
+
+CREATE  TABLE IF NOT EXISTS `pets_history`.`cliente_has_veterinario` (
+  `cliente_id_cliente` INT NOT NULL ,
+  `veterinario_id_veterinario` INT NOT NULL ,
+  PRIMARY KEY (`cliente_id_cliente`, `veterinario_id_veterinario`) ,
+  INDEX `fk_cliente_has_veterinario_veterinario1_idx` (`veterinario_id_veterinario` ASC) ,
+  INDEX `fk_cliente_has_veterinario_cliente1_idx` (`cliente_id_cliente` ASC) ,
+  CONSTRAINT `fk_cliente_has_veterinario_cliente1`
+    FOREIGN KEY (`cliente_id_cliente` )
+    REFERENCES `pets_history`.`cliente` (`id_cliente` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_cliente_has_veterinario_veterinario1`
+    FOREIGN KEY (`veterinario_id_veterinario` )
+    REFERENCES `pets_history`.`veterinario` (`id_veterinario` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
